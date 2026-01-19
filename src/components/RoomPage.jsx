@@ -108,6 +108,20 @@ function RoomPage() {
       setQueue(videoQueue)
     })
 
+    // Handle sync updates from server (heartbeat)
+    newSocket.on('sync-update', ({ time: serverTime }) => {
+      if (playerRef.current) {
+        const localTime = playerRef.current.getCurrentTime()
+        const drift = Math.abs(localTime - serverTime)
+
+        // If drift is > 2 seconds, auto-seek to catch up
+        if (drift > 2) {
+          console.log(`Syncing: drift of ${drift.toFixed(2)}s detected`)
+          playerRef.current.seek(serverTime)
+        }
+      }
+    })
+
     return () => {
       newSocket.disconnect()
     }
@@ -138,10 +152,12 @@ function RoomPage() {
   }
 
   const handleTimeUpdate = (time) => {
+    // Only host sends time updates
     if (socket && isHost) {
       socket.emit('time-update', { roomCode, time })
     }
-    setCurrentTime(time)
+    // We don't update local state here to avoid jitter loop for host
+    // setCurrentTime(time) 
   }
 
   const handleVideoChange = (newVideoId) => {

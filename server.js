@@ -156,6 +156,8 @@ io.on('connection', (socket) => {
     const room = rooms.get(roomCode);
     if (!room || room.hostId !== socket.id) return;
     room.currentTime = time;
+    // Broadcast time to other users for drift correction
+    socket.to(roomCode).emit('sync-update', { time });
   });
 
   // Host changes video

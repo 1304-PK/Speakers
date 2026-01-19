@@ -9,7 +9,7 @@ You will need to deploy them separately.
 ## 1. Deploy the Backend (Render.com Recommended)
 Render is free and easy to use for Node.js apps.
 
-1.  Push your code to a **GitHub repository**.
+1.  Push your code to a **GitHub repository** (You've already done this).
 2.  Sign up/Login to [Render.com](https://render.com).
 3.  Click **New +** -> **Web Service**.
 4.  Connect your GitHub repository.
@@ -34,21 +34,13 @@ Vercel is excellent for Vite/React apps.
         *   Value: `https://speakers-backend.onrender.com` (The URL you copied from Render)
 5.  Click **Deploy**.
 
+*Note: I have added a `vercel.json` file to your project to handle page refreshes correctly.*
+
 ## 3. Post-Deployment
 The frontend will now be live on a Vercel URL (e.g., `https://speakers-app.vercel.app`).
 - Open the Vercel URL in your browser.
 - It should connect to your Render backend automatically.
 
 ### Troubleshooting
-- **Frontend can't connect:** Check the browser console (F12). If you see connection errors, verify the `VITE_BACKEND_URL` in Vercel settings matches your Render backend URL exactly (no trailing slashes is usually safer, though Socket.io handles it).
-- **CORS Errors:** If you see CORS errors in the backend logs or browser, you might need to update `server.js` to allow the specific frontend domain in the `cors` origin array, instead of just localhost.
-    *   In `server.js`, update the `cors` options:
-        ```javascript
-        const io = socketIo(server, {
-          cors: {
-            // Add your Vercel URL here
-            origin: ["http://localhost:5000", "https://your-app-name.vercel.app"], 
-            methods: ["GET", "POST"]
-          }
-        });
-        ```
+- **Frontend can't connect:** Check the browser console (F12). If you see connection errors, verify the `VITE_BACKEND_URL` in Vercel settings matches your Render backend URL exactly.
+- **CORS Errors:** I have already configured the backend to accept connections from *any* origin, so you should not see CORS errors.

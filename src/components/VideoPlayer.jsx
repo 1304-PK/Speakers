@@ -108,7 +108,7 @@ const VideoPlayer = forwardRef(({ videoId, isPlaying, currentTime, onTimeUpdate 
 
   const startSync = () => {
     if (syncIntervalRef.current) return
-    
+
     syncIntervalRef.current = setInterval(() => {
       if (playerRef.current && !isSeekingRef.current) {
         try {
@@ -176,6 +176,16 @@ const VideoPlayer = forwardRef(({ videoId, isPlaying, currentTime, onTimeUpdate 
           isSeekingRef.current = false
         }
       }
+    },
+    getCurrentTime: () => {
+      if (playerRef.current && playerRef.current.getCurrentTime) {
+        try {
+          return playerRef.current.getCurrentTime()
+        } catch (e) {
+          return 0
+        }
+      }
+      return 0
     }
   }))
 
